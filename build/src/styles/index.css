@@ -25,7 +25,9 @@ header {
 	font-size: 2rem;
 	text-align: center;
 }
-
+header span {
+	font-size: 1rem
+}
 .article-wrapper {
 	width: 80%;
 	max-width: 800px;
@@ -57,3 +59,10 @@ header {
 	padding-left: 10px;
 }
 
+.article-note {
+	font-size: 1.2rem;
+}
+
+.article-note a {
+	float: right;
+}
