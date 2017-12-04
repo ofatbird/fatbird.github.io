@@ -28,6 +28,7 @@ header {
 
 .article-wrapper {
 	width: 80%;
+	max-width: 800px;
 	margin: 0 auto;
 	font-size: 1.6em;
 }
@@ -41,7 +42,7 @@ header {
 .article-wrapper ul li {
 	border: 2px solid #ccc;
 	margin: 15px 0;
-	padding: 5px;
+	padding: 5px 10px;
 	box-shadow: 2px 8px 4px -6px rgba(0,0,0,.3);
 	border: 2px solid #e6e7e9;
 	transition: all .5s ease;
