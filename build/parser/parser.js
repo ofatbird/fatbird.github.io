@@ -42,7 +42,7 @@ function paginate () {
 
 const aricle_pug = fs.readFileSync('../template.pug/articles.pug', 'utf8')
 const abstract = generateAbstract(article.htmlTree)
-const articlepath = `/${moment(config.date).format('MM-DD-YYYY')}/${config.order}/index.html`
+const articlepath = `/${moment(config.date).format('YYYY-MM-DD')}/${config.order}/index.html`
 const articlefooter = '<div class="article-note"><span>编辑于 ' + moment(config.date).format('MM-DD-YYYY') + '</span><a href="'+ articlepath +'">阅读全文</a></div>'
 const pugString = html2pug('<ul><li class="article-item">' + abstract + articlefooter + '</li></ul>', {fragment: true})
 
