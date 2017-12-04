@@ -47,7 +47,7 @@ header span {
 	padding: 5px 10px;
 	box-shadow: 2px 8px 4px -6px rgba(0,0,0,.3);
 	border: 2px solid #e6e7e9;
-	transition: all .5s ease;
+	// transition: all .5s ease;
 	overflow: hidden;
 }
 

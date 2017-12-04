@@ -2,13 +2,10 @@ const path = require('path')
 const readYaml = require('./yaml.js')
 const moment = require('moment')
 const pug = require('pug')
-const html2pug = require('html2pug')
 const md = require('markdown').markdown
 const fs = require('fs')
 
-const config = readYaml(path.resolve(__dirname, '../article.yml'))
-const article = md2html(path.resolve(__dirname, `../article.md/${config.filename}.md`))
-
+const articles = readYaml(path.resolve(__dirname, '../article.yml'))
 function md2html (path) {
   const content = fs.readFileSync(path, 'utf8')
   try {
@@ -25,27 +22,53 @@ function md2html (path) {
 function generateAbstract (tree) {
   return md.renderJsonML(tree.slice(0, 3))
 }
-
-function createFolder (date) {
-	if(!fs.existsSync(`../../${date}`)) fs.mkdirSync(`../../${date}`)
-	if(!fs.existsSync(`../../${date}/${config.order}`)) fs.mkdirSync(`../../${date}/${config.order}`)
-  fs.writeFileSync(`../../${date}/${config.order}/index.html`, pug.renderFile('../template.pug/index.article.pug'))
+function createFoler (relativePath) {
+  const prefix = '../..'
+  const paths = relativePath.split('/')
+  paths.reduce((leftVal, rightVal) => {
+    const dir = leftVal + '/' + rightVal
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+    return dir
+  }, prefix)
+  return prefix + '/' + relativePath
 }
+// const pugVals = articles.map(info => {
 
-function paginate () {
+//   // 把单个文章写入文件夹里面
+
+//   return `<li class="article-item">${abstract}${articlefooter}</li>`
+// })
+
+const pagination = ''
+const pageContainer = []
+let page = 0
+for (let i = 0; i < articles.length; i++) {
+  const info = articles[i]
+  const date = moment(info.date).format(`YYYY-MM-DD`)
+  const articlepath = `/articles/${date}/${info.order}/`
+  const article = md2html(path.resolve(__dirname, `../article.md/${info.filename}.md`))
+  const abstract = generateAbstract(article.htmlTree)
+  const articlefooter = `<div class="article-note"><span>编辑于 ${date}</span><a href="${articlepath}">阅读全文</a></div>`
+  if (i % 5 === 0) {
+    if (page > 1) {
+      fs.writeFileSync(`${createFoler(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+        articles: pageContainer.reverse().join('')
+      }))
+    }
+    page++
+    pageContainer.length = 0
+  }
+  pageContainer.push(`<li class="article-item">${abstract}${articlefooter}</li>`)
+  fs.writeFileSync(`${createFoler(`articles/${date}/${info.order}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+    articles: `<li class="article-item">${article.html}</li>`
+  }))
 }
-// console.log(pug.renderFile('../template.pug/index.pug', {
-// 	articles: [generateAbstract(article.htmlTree)]
-// }))
-// console.log(article.html)
-// console.log(generateAbstract(article.htmlTree))
-
-const aricle_pug = fs.readFileSync('../template.pug/articles.pug', 'utf8')
-const abstract = generateAbstract(article.htmlTree)
-const articlepath = `/${moment(config.date).format('YYYY-MM-DD')}/${config.order}/index.html`
-const articlefooter = '<div class="article-note"><span>编辑于 ' + moment(config.date).format('MM-DD-YYYY') + '</span><a href="'+ articlepath +'">阅读全文</a></div>'
-const pugString = html2pug('<ul><li class="article-item">' + abstract + articlefooter + '</li></ul>', {fragment: true})
-
-fs.writeFileSync('../template.pug/articles.pug', aricle_pug.replace('ul', pugString))
-fs.writeFileSync('../template.pug/article.pug', html2pug(article.html, {fragment: true}))
-createFolder(moment(config.date).format('YYYY-MM-DD'))
+if (page > 1) {
+  fs.writeFileSync(`${createFoler(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+    articles: pageContainer.reverse().join('')
+  }))
+} else {
+  fs.writeFileSync('../index.html', pug.renderFile('../template.pug/index.pug', {
+    articles: pageContainer.reverse().join('')
+  }))
+}

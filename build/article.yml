@@ -1,3 +1,8 @@
-filename: 'first'
-date: 2017-11-21
-order: 1
+-
+  filename: 'first'
+  date: 2017-11-21
+  order: 1
+-
+  filename: 'hello'
+  date: 2017-12-04
+  order: 1
