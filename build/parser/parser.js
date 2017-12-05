@@ -22,7 +22,7 @@ function md2html (path) {
 function generateAbstract (tree) {
   return md.renderJsonML(tree.slice(0, 3))
 }
-function createFoler (relativePath) {
+function createFolder (relativePath) {
   const prefix = '../..'
   const paths = relativePath.split('/')
   paths.reduce((leftVal, rightVal) => {
@@ -41,6 +41,7 @@ function createFoler (relativePath) {
 
 const pagination = ''
 const pageContainer = []
+const totalPages = Math.ceil(articles.length / 5);
 let page = 0
 for (let i = 0; i < articles.length; i++) {
   const info = articles[i]
@@ -51,20 +52,29 @@ for (let i = 0; i < articles.length; i++) {
   const articlefooter = `<div class="article-note"><span>编辑于 ${date}</span><a href="${articlepath}">阅读全文</a></div>`
   if (i % 5 === 0) {
     if (page > 1) {
-      fs.writeFileSync(`${createFoler(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
-        articles: pageContainer.reverse().join('')
+      for (let j = 1; j <= totalPages; j++) {
+        if (j === page) {
+          pagination += `<span class="active">${j}<span>`
+          continue;
+        }
+        pagination += `<span>${j}</span>`
+      }
+      
+      fs.writeFileSync(`${createFolder(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+        articles: pageContainer.reverse().join(''),
+        pagination,
       }))
     }
     page++
     pageContainer.length = 0
   }
   pageContainer.push(`<li class="article-item">${abstract}${articlefooter}</li>`)
-  fs.writeFileSync(`${createFoler(`articles/${date}/${info.order}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+  fs.writeFileSync(`${createFolder(`articles/${date}/${info.order}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
     articles: `<li class="article-item">${article.html}</li>`
   }))
 }
 if (page > 1) {
-  fs.writeFileSync(`${createFoler(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
+  fs.writeFileSync(`${createFolder(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
     articles: pageContainer.reverse().join('')
   }))
 } else {
