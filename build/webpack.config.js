@@ -11,7 +11,7 @@ const plugins = isProd ? [
   new ExtractTextPlugin('css/[name].css'),
   new HtmlWebpackPlugin({
     template: 'index.html',
-    filename: 'index.html'
+    filename: 'index.html',
   }),
   new webpack.optimize.UglifyJsPlugin({
     compress: {
@@ -24,7 +24,8 @@ const plugins = isProd ? [
   new FreindlyErrors(),
   new HtmlWebpackPlugin({
     template: 'index.html',
-    filename: 'index.html'
+    filename: 'index.html',
+    inject: false,
   })
 ]
 module.exports = {
