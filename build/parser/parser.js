@@ -55,7 +55,7 @@ if (totalPages > 1) {
   page++
   fs.writeFileSync('../index.html', pug.renderFile('../template.pug/index.pug', {
     articles: pageContainer.join(''),
-    pagination: `<div><a class="next" href="/page/2">下一页</a></div>`
+    pagination: `<div class="pagination"><a class="next" href="/page/2">下一页</a></div>`
   }))
   pageContainer.length = 0
   for (i = 0; i < articles.length; i++) {
@@ -72,7 +72,7 @@ if (totalPages > 1) {
     if (pageContainer.length === 5 || (i + 1 === articles.length && pageContainer.length < 5)) {
       page++
       if (page < totalPages) {
-        pagination = `<div><a class="prev" href="/page/${page-1}">上一页</a><a class="next" href="/page/${page+1}">下一页</a></div>`
+        pagination = `<div class="pagination"><a class="prev" href="/page/${page-1}">上一页</a><a class="next" href="/page/${page+1}">下一页</a></div>`
       } else {
         let path = ''
         if (page === 2) {
@@ -80,7 +80,7 @@ if (totalPages > 1) {
         } else {
           path = '/page/' + (page - 1)
         }
-        pagination = `<div><a class="prev" href="${path}">上一页</a></div>`
+        pagination = `<div class="pagination"><a class="prev" href="${path}">上一页</a></div>`
       }
       fs.writeFileSync(`${createFolder(`page/${page}`)}/index.html`, pug.renderFile('../template.pug/index.pug', {
         articles: pageContainer.join(''),

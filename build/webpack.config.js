@@ -12,6 +12,7 @@ const plugins = isProd ? [
   new HtmlWebpackPlugin({
     template: 'index.html',
     filename: 'index.html',
+    inject: false,
   }),
   new webpack.optimize.UglifyJsPlugin({
     compress: {
@@ -25,7 +26,6 @@ const plugins = isProd ? [
   new HtmlWebpackPlugin({
     template: 'index.html',
     filename: 'index.html',
-    inject: false,
   })
 ]
 module.exports = {
